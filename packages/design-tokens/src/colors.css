@@ -1,0 +1,27 @@
+:root {
+  --color-primary: #c8a882;
+  --color-primary-hover: #b8976e;
+  --color-primary-light: #f6f1eb;
+  --color-surface: #f9f6f0;
+  --color-card: #ffffff;
+  --color-muted: #f0ebe4;
+  --color-text: #2c2c2c;
+  --color-text-secondary: #6b6258;
+  --color-text-caption: #8a7a6a;
+  --color-positive: #b95757;
+  --color-negative: #8b9c7e;
+  --color-danger: #c27b6b;
+  --color-faction-fe: #d4a04a;
+  --color-faction-fo: #7a9ca8;
+  --color-faction-ve: #8b5a4a;
+  --color-faction-vo: #6b7a5c;
+  --color-faction-fe-light: #faf5e8;
+  --color-faction-fo-light: #f0f5f6;
+  --color-faction-ve-light: #f8f2ef;
+  --color-faction-vo-light: #f2f4f0;
+}
+
+:root[lang="en"], :root[data-locale="en"] {
+  --color-positive: #8b9c7e;
+  --color-negative: #b95757;
+}

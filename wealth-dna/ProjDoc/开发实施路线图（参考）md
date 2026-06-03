@@ -1,0 +1,80 @@
+🛠️ Oracle (财务基因解码) · 开发实施路线图
+
+项目名称：Wealth DNA (财务基因解码)
+对应文档：财务16人格 · 模型与问卷设计总纲.md
+当前阶段：MVP 全栈开发 (Phase 1: 问卷答题 + 报告展示)
+
+技术架构决策 (Tech Stack Decision)
+为了快速验证，建议采用“全栈TypeScript + 静态托管”的轻量级方案，方便后续嵌入各种App或H5场景。
+
+前端框架：React + Vite (SPA模式，极速热更新，适合H5)。
+样式方案：Tailwind CSS (Utility-First，无需写CSS文件，快速实现多邻国式的圆润卡片和间距)。
+状态管理：Zustand (比 Redux 轻量，适合这种单页应用，方便在答题页和结果页共享数据)。
+路由：React Router DOM (管理 /quiz 和 /result 两个主要路由)。
+部署：Vercel / Netlify / 静态OSS (低成本，甚至不需要后端)。
+数据流：
+    题目数据：直接打包在前端 questions.json 中（46题）。
+    计算逻辑：前端实时计算（答完最后一题，前端根据算法手册直接算出结果，无需调用后端API，除非你要做大数据分析）。
+
+核心功能模块开发清单 (基于总纲 Phase 1)
+
+根据总纲的“阶段1：最小可用产品”，我们将任务拆解为可执行的代码模块：
+模块   子任务   关键实现细节 (基于文档)
+A. 题库集成   1. 创建 questions.json   将 财务人格问卷 · 完整题库.md 中的 46 题结构化。字段建议：id, type (S/C, I/G...), text, options: [{text, weight: {S: +2, C: -1...}}]
+
+题目打乱逻辑   重点：实现总纲 3.1 要求的“前端随机打乱题序，同维度题不连续出现超过 2 题”。交互：点击选项 -> 添加选中态样式 -> 自动平滑滚动到下一题（多邻国手感）。
+
+进度系统   顶部进度条（总进度 46/46）+ 阶段性提示（如“第2部分：风险耐受力”）。
+
+状态管理   使用 Zustand 存储 currentQuestionIndex 和 userAnswers (答案数组)。
+
+C. 评分算法   1. 计分逻辑实现   参照 问卷评分算法与参数计算手册.md。编写 calculateResult(answers) 函数：- 分别累加四个维度的得分。- 计算 P值 (0-100)。- 判定倾向 (S/C 等) 和强度 (强/轻/平)。
+
+参数推算   编写 calculateSimulatorParams(answers) 函数，输出那 7 个核心参数 (I_net, S_rate_final 等)。
+
+D. 结果报告   1. 结果页路由 (/result)   接收计算出的 personalityType (如 SIFE) 和 parameters。
+
+文案注入   将 16人格全量文案Fin.md 和 流派相关文案.md 转化为前端组件。根据 personalityType 动态渲染对应的文案块。
+
+视觉呈现   流派色调：根据 FE/FO/VE/VO 四大流派应用不同的主色调（虽然美术未定，但代码里要预留 CSS 变量）。DNA 代码：动态生成并高亮显示四位代码。
+
+交互体验细节 (UX Specs)
+
+为了复刻“多邻国”的爽感，开发时请叮嘱前端注意以下细节：
+
+转场动画：
+    进入题目：淡入 + 上浮。
+    选择选项：按钮点击反馈（scale缩放） + 卡片消失（slide out）。
+    下一题出现：卡片出现（slide in）。
+   工具推荐：Framer Motion (React)。
+阶段性反馈 (Gamification)：
+    每答完 8 题（或一个维度），弹出一个微小的 Toast 提示：“已捕捉你的消费观特征！”（增强游戏进度感）。
+结果页的“仪式感”：
+    答完最后一题，不要直接跳转。
+    增加一个 2秒的“基因测序”动画（模拟加载，其实是前端在跑算法），配合文字：“正在解码你的财务基因...”。
+
+埋点设计 (Analytics)
+
+为了验证模型的有效性，我们需要在 MVP 阶段就埋入以下数据点（建议使用 Amplitude / Mixpanel / 或简单的日志上报）：
+
+事件 1: Quiz Start (开始答题)
+    属性：无
+事件 2: Answer Submit (提交答案)
+    属性：question_id, selected_option (A/B/C/D)
+   目的：分析哪道题流失率最高，哪道题大家选得最纠结。
+事件 3: Result View (查看结果)
+    属性：
+        personality_type (如 SIFE)
+        dimension_scores (四个维度的具体分数，用于后续分析聚类)
+        simulator_params (抽样上报 7 个参数，看分布是否合理)
+事件 4: Share Click (点击分享)
+
+针对“模拟器对接”的特别建议
+
+总纲中提到 Phase 2 是对接模拟器。为了降低初期开发难度，建议在 Oracle 的 MVP 阶段，先做一个“假跳转”或“参数预览”：
+
+方案 A (假跳转)：结果页底部放一个按钮“进入沙盘模拟器”，点击后跳转到一个 Coming Soon 的占位页。这样你先把 Oracle 的闭环跑通，不用等模拟器开发。
+方案 B (参数透传)：如果模拟器已经有雏形，利用 URL 参数传递数据。
+    生成链接：https://sandbox.com?dna=SIFE&p1=80&p2=40...
+    这样模拟器只需要解析 URL 就能拿到初始参数。
+

@@ -1,0 +1,138 @@
+import type { Faction } from '@fj/engine-core';
+
+export interface FactionContent {
+  name: string;
+  slogan: string;
+  guide: string;
+  overview: string;
+  color: string;
+  colorLight: string;
+}
+
+export const FACTION_CONTENT: Record<string, FactionContent> = {
+  'FE 拓荒者流派': {
+    name: 'FE 拓荒者流派',
+    slogan: '我宁愿在风暴里航行，也不愿在港口里腐烂。',
+    guide: '你不是不爱安稳，你只是更怕没活过。当别人在计算退休倒计时的时候，你正在寻找改写人生剧本的工具。组织规训和按部就班的稳定只会让你感到被圈养，你在旧秩序崩塌的裂缝中渴望留下痕迹。',
+    overview: '拓荒者相信金钱的本质是对人生剧本的改写权。你们对未被定义的可能性充满兴奋，认为真正的财富绝不来自线性的顺从，而是来自对时代势能的自主掌控。追求独立主权是你们的底线，你们害怕的从来不是风暴与风险，而是创造力的提前枯竭与平庸。',
+    color: '#d4a04a',
+    colorLight: '#faf5e8',
+  },
+  'FO 离岸者流派': {
+    name: 'FO 离岸者流派',
+    slogan: '真正的自由，是不再需要向世界证明什么。',
+    guide: '你看穿了消费主义的赌场和永无止境的内卷系统。你搞钱不是为了向谁证明成功，也不是为了征服世界，而是为了买一张安静的门票，彻底退出这个由 KPI 和噪音构成的宏大机器。',
+    overview: '离岸者相信财富的终极意义不是拥有更多，而是需要更少。你们对主流成功学叙事保持天然警惕，崇尚极简主义与精神空间的完整性。你们的努力从不指向系统的顶层，而是指向地理与时间上的绝对自决。用降低物欲来换取彻底的松弛感与空白时间，是你们率先看穿系统的智慧。',
+    color: '#7a9ca8',
+    colorLight: '#f0f5f6',
+  },
+  'VE 征服者流派': {
+    name: 'VE 征服者流派',
+    slogan: '世界不会奖励脆弱，只会奖励赢家。',
+    guide: '人生是一场高压驱动的阶层跃迁赛。你从不掩饰自己的胜负欲与对社会化尊严的渴望。金钱在你的手里，是证明个人能力的终极军功章，也是你为自己和家庭加装的坚固责任装甲。',
+    overview: '征服者坚信人生的本质就是竞争与资源争夺。你们搞钱的驱动力源自深层的社会认同与家庭责任。在你们眼中，财富代表着不可动摇的地位、话语权与圈层认可。你们不害怕高强度的压力与竞争，只害怕默默无闻地被时代遗忘，拼命赢下每一场博弈是你们对自我价值的硬核证明。',
+    color: '#8b5a4a',
+    colorLight: '#f8f2ef',
+  },
+  'VO 守夜人流派': {
+    name: 'VO 守夜人流派',
+    slogan: '真正的强大，是让风险永远进不了家门。',
+    guide: '世界动荡不堪，而你是那个在风暴来临前默默加固城墙的人。你搞钱既不为了虚无的自由，也不为了炫耀胜利，而是为了给所爱之人打造一个绝对安全、不被任何意外击碎的避风港。',
+    overview: '守夜人是天然的长期主义者，将财富视为抵御不确定性的终极城墙。你们不相信暴富神话，只相信跨越周期的稳定秩序、严格的储蓄纪律与防御性现金流。对你们而言，保守并非软弱，而是最高级别的责任感。确保不管世界如何变幻，家人的明天都永远安稳，是你们的不变信仰。',
+    color: '#6b7a5c',
+    colorLight: '#f2f4f0',
+  },
+};
+
+export const DIMENSION_LABELS: Record<string, { name: string; forward: string; reverse: string }> = {
+  SC: { name: '资源分配观', forward: '蓄水型 (S)', reverse: '体验型 (C)' },
+  IG: { name: '风险耐受力', forward: '进取型 (I)', reverse: '防守型 (G)' },
+  FV: { name: '核心内驱力', forward: '自由自决型 (F)', reverse: '认同尊严型 (V)' },
+  EO: { name: '终极价值观', forward: '奇旅激荡型 (E)', reverse: '秩序安稳型 (O)' },
+};
+
+export interface DimensionBadge {
+  code: string;     // e.g. "铁血像素仓鼠"
+  description: string;
+}
+
+const DIMENSION_BADGES: Record<string, Record<string, DimensionBadge>> = {
+  SC: {
+    strong_forward:  { code: '铁血像素仓鼠',              description: '账户里雷打不动的余额数字是你的终极精神春药。你不是在压抑物欲，而是在进行一场名为"囤积安全感"的无情高阶消费。' },
+    mild_forward:    { code: '带排气阀的储蓄罐',          description: '习惯在日常搬砖中筑墙积粮，用资产沉淀换取不慌张的底气。但在特定高光时刻，你也懂得拧开阀门犒劳灵魂。' },
+    balanced:        { code: '薛定谔的打折购物车',        description: '蓄水还是碎钞？全看当时的收入底气和眼前的清仓力度。永远在"今天省一块"和"明天花一千"之间反复拉锯。' },
+    mild_reverse:    { code: '安了高配刹车的快乐喷泉',    description: '坚信生活都这么苦了，必须用当下的生命质量和多巴胺来续命。但在滑向精致穷的边缘时，你内心的财务刹车片总能踩得死死的。' },
+    strong_reverse:  { code: '多巴胺无情碎钞机',          description: '钱只有被花掉、转换成朋友圈里的亲身经历时，才真正算活过。你彻底看穿了数字的冰冷，只想当"人间体验卡"的终极玩家。' },
+  },
+  IG: {
+    strong_forward:  { code: '绿光过山车重仓冲浪手',      description: '拥有打不死的超级大心脏。你甚至能从市场的惊涛骇浪中品尝出刺激的快感，只要能换取超额复利，你甘愿在悬崖边蹦迪。' },
+    mild_forward:    { code: '戴防爆头盔的夺宝猎人',      description: '你不排斥资本增值的博弈游戏，也渴望资产起飞。但每一次中高风险试探，都建立在你深度研究和防爆安全垫的前提下。' },
+    balanced:        { code: '牛熊精神交替撕裂者',        description: '行情好时无情加仓急先锋，行情差时连本带利全清保本狂魔。随大势剧烈摆动，既有极强的环境适应力，也容易在风浪中陷入两难。' },
+    mild_reverse:    { code: '红线内战术防守队员',        description: '账户里一旦飘绿，你的神经就会高度敏感。只接受极低波动的温和增值，前提是必须随时能看到清晰安稳的现金流回馈。' },
+    strong_reverse:  { code: '零回撤铁壁现金巨龙',        description: '任何超出10%的账面波动都会引发你的精神海啸。只信任存款和国债，本金绝对安全就是对抗生活的终极铠甲。' },
+  },
+  FV: {
+    strong_forward:  { code: '地表最强规训绝缘体',        description: '你搞钱的唯一动机就是凑齐给自己的"赎身金"。天然对大厂黑话和权威画饼高度排异，疯狂搬砖只为买回不看任何人脸色的时间主权。' },
+    mild_forward:    { code: '工位潜伏的战略卧底',        description: '内心极度抗拒职场规训，时刻做好了精神自决的准备。但在现实房贷和碎银子压力下，依然保持着极其体面的隐忍与让步。' },
+    balanced:        { code: '旷野与格子间的拔河手',      description: '灵肉分离的典型代表。既不想被职场完全收编、极度渴望旷野的自由，又无法割舍社会地位对自我价值的硬核证明。' },
+    mild_reverse:    { code: '重载前行的硬核面包猎人',    description: '你把搞钱视作一场外向型的责任长征。愿意承担职场内卷与家庭重担，从高额报酬与给家人换取遮风挡雨的护甲中获得胜任感。' },
+    strong_reverse:  { code: '钢铁责任装甲捍卫者',        description: '钱是你用来保护圈层、证明自身强者能力的终极装甲。搞钱动力完全由赢得社会尊严与守护家庭的铁肩责任所驱动。' },
+  },
+  EO: {
+    strong_forward:  { code: '永动机式奇旅开拓者',        description: '你视生命为一场高能阶的疯狂实验，不确定性只会让你兴奋而非焦虑。搞到巨款绝不是为了躺平，而是为了升级装备开启更宏大的新项目。' },
+    mild_forward:    { code: '揣着安全垫的跨界玩家',      description: '内心深处永远燃着一团不甘平庸的火，梦想攒够生计底气后就去折腾跨界项目。但在本金没攒够前，依然会小心翼翼地防范意外。' },
+    balanced:        { code: '硬核蹦迪流修仙隐士',        description: '极其微妙的双驱模式。在搬砖或副业上是折腾不止的冒险家；但在财富自由的终极场景里，又极度渴望完全控噪的极致平静。' },
+    mild_reverse:    { code: '低能耗静音降噪耳机',        description: '财富对你最大的诱惑，就是帮你一键清除多余的内卷、无效社交和时代噪音。向往低能耗、有保障的慢节奏生活。' },
+    strong_reverse:  { code: '"无周一"终极避世净化舱',   description: '你已经彻底看穿了名利场的永无止境。金钱的终极宿命：帮你挡死所有意外，换取一个完全可控、再无周一催命的内心纯粹平静。' },
+  },
+};
+
+export function getDimensionBadge(dimension: string, pValue: number): DimensionBadge | null {
+  const key = pValue >= 60 ? 'strong_forward'
+    : pValue > 50 ? 'mild_forward'
+    : pValue === 50 ? 'balanced'
+    : pValue > 40 ? 'mild_reverse'
+    : 'strong_reverse';
+  return DIMENSION_BADGES[dimension]?.[key] ?? null;
+}
+
+export function getDimensionInterpretation(dimension: string, pValue: number): string {
+  const interpretations: Record<string, Record<string, string>> = {
+    SC: {
+      strong_forward: '你是一个坚定的蓄水型。储蓄对你来说不是对物欲的压抑，而是另一种形式的消费——你从资产数字的稳步增长中获得最真实的满足与高确定性的安全感。',
+      mild_forward: '你整体偏向蓄水型，但保留了一定的消费弹性。你习惯通过资产沉淀换取踏实感，但也能在特定时刻享受悦己的体验。',
+      balanced: '你在蓄水和现时体验之间处于罕见的平衡状态。你的消费决策更多取决于具体的情境与实际收入。',
+      mild_reverse: '你偏向现时体验型，但绝非毫无节制的月光族。你愿意为当下的生命质量买单，但内心始终保留着一根不容逾越的财务底线。',
+      strong_reverse: '你是一个坚定的现时体验型。你深信钱只有被花掉、转换成亲身经历的那一刻，才真正属于你。',
+    },
+    IG: {
+      strong_forward: '你是坚定的进取型风控人格。你拥有极高的风险耐受力，能从容直面甚至享受巨大的市场波动。',
+      mild_forward: '你偏向进取型，并不排斥市场风险，但在面对单年回撤时仍会保持警惕。',
+      balanced: '你在风险进取与防守之间处于罕见的中间地带，会根据牛熊周期或个人资产多寡灵活切换。',
+      mild_reverse: '你偏向防守型，对账面波动保持天然的敏感与轻度损失厌恶。',
+      strong_reverse: '你是坚定的防守型守护者，追求本金的绝对安全，稳字对你高于一切。',
+    },
+    FV: {
+      strong_forward: '你是坚定的自由自决型。金钱对你而言只有两个字——"赎身金"。你搞钱的唯一目标就是买回自己的时间主权。',
+      mild_forward: '你偏向自由自决型，对职场规训耐受度较低，但在现实压力下仍保留了一定的隐忍空间。',
+      balanced: '你在追求绝对自由与渴望社会认同之间处于平衡状态。这是一场长期的精神拔河。',
+      mild_reverse: '你偏向认同尊严型，搞钱在你眼里具有外向的社会化投射。',
+      strong_reverse: '你是坚定的认同尊严型。金钱的本质是你的"责任装甲"，你所有的搞钱动力都指向赢得社会尊严与守护家人。',
+    },
+    EO: {
+      strong_forward: '你是坚定的奇旅激荡型。你将人生视为一场高能阶的实验，对不确定性表现为兴奋而非焦虑。',
+      mild_forward: '你偏向奇旅激荡型，渴望财富自由后去折腾跨界项目，但在积累充分前仍会小心评估不确定性。',
+      balanced: '你在激荡与秩序之间保持着微妙的动态平衡——在职场追求刺激，但在财富终局上渴望平静。',
+      mild_reverse: '你偏向秩序安稳型，财富对你的首要诱惑在于清除生命中多余的噪音。',
+      strong_reverse: '你是坚定的秩序安稳型，财富自由后的理想终局是获得完全可控、内心纯粹的平静。',
+    },
+  };
+
+  const key = pValue >= 60 ? 'strong_forward'
+    : pValue > 50 ? 'mild_forward'
+    : pValue === 50 ? 'balanced'
+    : pValue > 40 ? 'mild_reverse'
+    : 'strong_reverse';
+
+  return interpretations[dimension]?.[key] ?? '';
+}

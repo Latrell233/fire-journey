@@ -1,0 +1,13 @@
+{
+  "name": "@fj/design-tokens",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/tokens.ts",
+  "exports": {
+    "./colors.css": "./src/colors.css",
+    "./typography.css": "./src/typography.css",
+    "./spacing.css": "./src/spacing.css",
+    "./animations.css": "./src/animations.css",
+    ".": "./src/tokens.ts"
+  }
+}
