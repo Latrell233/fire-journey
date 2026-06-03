@@ -1,0 +1,9 @@
+{
+  "buildCommand": "pnpm build && node scripts/aggregate.mjs",
+  "outputDirectory": "dist",
+  "installCommand": "pnpm install",
+  "rewrites": [
+    { "source": "/oracle", "destination": "/oracle/index.html" },
+    { "source": "/oracle/:path*", "destination": "/oracle/index.html" }
+  ]
+}
