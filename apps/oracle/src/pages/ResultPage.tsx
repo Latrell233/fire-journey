@@ -28,10 +28,22 @@ export default function ResultPage() {
   const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
-    if (!personality) navigate('/', { replace: true });
+    if (!personality) {
+      // Delay redirect to avoid flash if store is still hydrating
+      const t = setTimeout(() => navigate('/', { replace: true }), 500);
+      return () => clearTimeout(t);
+    }
   }, [personality, navigate]);
 
-  if (!personality) return null;
+  if (!personality) {
+    // Show spinner while waiting — prevents blank background
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <div className="w-8 h-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+        <p className="text-[13px] text-[#8a7a6a]">正在加载结果...</p>
+      </div>
+    );
+  }
 
   const { code, faction, typeName, dimensions } = personality;
   const factionColor = FACTION_CONTENT[faction]?.color ?? '#d4a04a';

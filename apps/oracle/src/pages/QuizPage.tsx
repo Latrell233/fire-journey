@@ -97,24 +97,18 @@ export default function QuizPage() {
   useEffect(() => {
     if (!isComplete || questions.length === 0) return;
 
-    // Brief delay to let the last answer lock animation play (180ms) before transitioning
-    const revealTimer = setTimeout(() => {
-      setIsCalculating(true);
-    }, 250);
-
-    const calcTimer = setTimeout(() => {
+    // All timers are flat (no nesting) so cleanup can cancel everything
+    const t1 = setTimeout(() => setIsCalculating(true), 250);
+    const t2 = setTimeout(() => {
       const answerValues = questions.map((_, i) => answers[i] ?? 'B');
-      const personality = calculatePersonality(answerValues, questions);
-      setResult(personality);
-
-      setTimeout(() => {
-        navigate('/result');
-      }, 500);
+      setResult(calculatePersonality(answerValues, questions));
     }, 1450);
+    const t3 = setTimeout(() => navigate('/result'), 1950);
 
     return () => {
-      clearTimeout(revealTimer);
-      clearTimeout(calcTimer);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
     };
   }, [isComplete]);
 
