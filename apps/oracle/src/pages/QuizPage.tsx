@@ -108,7 +108,6 @@ export default function QuizPage() {
       setResult(personality);
 
       setTimeout(() => {
-        setIsCalculating(false);
         navigate('/result');
       }, 500);
     }, 1450);

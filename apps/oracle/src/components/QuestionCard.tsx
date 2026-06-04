@@ -24,7 +24,10 @@ export default function QuestionCard({ question, selectedAnswer, isLocked, onSel
         >
           {/* Question text — generous min-height reserves consistent space */}
           <div className="min-h-[140px] pt-6 flex items-start">
-            <h2 className="text-[24px] font-bold text-[#2c2c2c] leading-tight">
+            <h2
+              className="text-[24px] font-bold text-[#2c2c2c] leading-relaxed"
+              style={{ textWrap: 'pretty' }}
+            >
               {question.text}
             </h2>
           </div>

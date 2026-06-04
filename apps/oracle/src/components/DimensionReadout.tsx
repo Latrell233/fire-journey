@@ -69,15 +69,15 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
             }}
           />
 
-          {/* Position dot */}
+          {/* Position dot — solid color circle at fill endpoint */}
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.3 }}
-            className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full shadow-sm z-20"
+            className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full z-20"
             style={{
-              left: `calc(${barPct}% - 7px)`,
-              border: `2px solid ${factionColor}`,
+              left: `calc(${barPct}% - 5px)`,
+              backgroundColor: factionColor,
             }}
           />
         </div>

@@ -19,7 +19,7 @@ export interface QuestionJSON {
 }
 
 export interface PersonalityResult {
-  code: string;              // "S-I-F-E" (may contain ̃ or /)
+  code: string;              // "S-I-F-E"
   faction: Faction;
   typeName: string;          // "远航-拓荒者"
   dimensions: {
@@ -28,4 +28,6 @@ export interface PersonalityResult {
     P_FV: number;
     P_EO: number;
   };
+  borderline: Dimension[];   // which dims are borderline (50-60 or 40-50)
+  balanced: Dimension[];     // which dims are perfectly balanced (50)
 }

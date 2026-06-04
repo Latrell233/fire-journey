@@ -1,15 +1,18 @@
 import { motion } from 'framer-motion';
 import { SHARE_COPY } from '../data/typeProfiles';
 import { FACTION_CONTENT } from '../data/factions';
-import type { Faction } from '@fj/engine-core';
+import CodeDisplay from './CodeDisplay';
+import type { Faction, Dimension } from '@fj/engine-core';
 
 interface Props {
   code: string;
   faction: Faction;
   typeName: string;
+  borderline: Dimension[];
+  balanced: Dimension[];
 }
 
-export default function ResultSummary({ code, faction, typeName }: Props) {
+export default function ResultSummary({ code, faction, typeName, borderline, balanced }: Props) {
   const share = SHARE_COPY[code];
   const factionData = FACTION_CONTENT[faction];
   const tagline = share?.tagline ?? factionData?.slogan ?? '';
@@ -18,29 +21,21 @@ export default function ResultSummary({ code, faction, typeName }: Props) {
     <motion.div
       initial={{ y: 16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.85 }}
-      className="mt-6 bg-white rounded-card p-6 border border-[#f0ebe4] text-center"
+      transition={{ delay: 0.4 }}
+      className="mt-4 bg-white rounded-card shadow-sm border border-[#f0ebe4] px-4 py-5 text-center"
     >
-      {/* One-line identity */}
-      <p className="text-[11px] text-[#8a7a6a] uppercase tracking-widest mb-3">
-        你的财富人格
+      <p className="text-[11px] text-[#8a7a6a] uppercase tracking-widest mb-1">你的财富人格</p>
+
+      {/* DNA Code animation */}
+      <CodeDisplay code={code} borderline={borderline} balanced={balanced} />
+
+      {/* Type name */}
+      <h2 className="text-[20px] font-bold text-[#2c2c2c] mt-1">{typeName}</h2>
+
+      {/* Tagline */}
+      <p className="text-[13px] text-[#6b6258] leading-relaxed italic mt-2 px-2">
+        {tagline}
       </p>
-
-      <h2 className="text-[24px] font-bold text-[#2c2c2c] mb-1">{typeName}</h2>
-      <p className="text-[15px] font-mono text-primary font-semibold mb-3">{code}</p>
-
-      {/* Tagline in quote style */}
-      <div className="relative px-4">
-        <span
-          className="absolute left-0 top-0 text-2xl leading-none opacity-20"
-          style={{ color: factionData?.color }}
-        >
-          "
-        </span>
-        <p className="text-[14px] text-[#6b6258] leading-relaxed italic px-2">
-          {tagline}
-        </p>
-      </div>
     </motion.div>
   );
 }

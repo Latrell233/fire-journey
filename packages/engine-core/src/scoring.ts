@@ -1,4 +1,4 @@
-import type { QuestionJSON, PersonalityResult, Faction } from './types';
+import type { QuestionJSON, PersonalityResult, Faction, Dimension } from './types';
 
 // A=+2 (strong forward), B=+1 (weak forward), C=+1 (weak reverse), D=+2 (strong reverse)
 const SCORE_MAP: Record<string, number> = { A: 2, B: 1, C: 1, D: 2 };
@@ -13,8 +13,8 @@ function computeP(forwardSum: number, reverseSum: number): number {
 function codeForDim(p: number, fwd: string, rev: string): string {
   if (p > 60) return fwd;
   if (p === 50) return `${fwd}/${rev}`;
-  if (p >= 50 && p < 60) return `${fwd}̃`;
-  if (p > 40 && p < 50) return `${rev}̃`;
+  if (p >= 50 && p < 60) return fwd;
+  if (p > 40 && p < 50) return rev;
   return rev;
 }
 
@@ -84,10 +84,21 @@ export function calculatePersonality(
   const igKey = P_IG >= 50 ? 'I' : 'G';
   const typeName = TYPE_NAMES[factionKey]?.[igKey]?.[scKey] ?? '';
 
+  // Detect borderline (50-60 or 40-50) and balanced (exactly 50) dimensions
+  const borderline: Dimension[] = [];
+  const balanced: Dimension[] = [];
+  const dims: [Dimension, number][] = [['SC', P_SC], ['IG', P_IG], ['FV', P_FV], ['EO', P_EO]];
+  for (const [dim, p] of dims) {
+    if (p === 50) balanced.push(dim);
+    else if (p > 40 && p < 60) borderline.push(dim);
+  }
+
   return {
     code,
     faction,
     typeName,
     dimensions: { P_SC, P_IG, P_FV, P_EO },
+    borderline,
+    balanced,
   };
 }
