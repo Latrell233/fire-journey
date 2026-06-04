@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import type { Product } from '../data/products';
 
 interface Props {
@@ -43,7 +42,7 @@ export default function ProductCard({ product, index }: Props) {
   );
 
   if (product.available) {
-    return <Link to={product.path} className="block">{card}</Link>;
+    return <a href={product.path} className="block">{card}</a>;
   }
   return card;
 }
