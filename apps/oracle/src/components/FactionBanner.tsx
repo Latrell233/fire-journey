@@ -26,6 +26,17 @@ export default function FactionBanner({ faction, typeName }: Props) {
         loading="lazy"
         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
       />
+      {/* CSS geometric texture overlay — subtle depth while waiting for image */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(0,0,0,0.06) 0%, transparent 50%),
+            repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.03) 40px, rgba(255,255,255,0.03) 41px)
+          `,
+        }}
+      />
       {/* Text overlay */}
       <div className="relative z-10">
         <p className="text-[11px] uppercase tracking-widest opacity-80 mb-2 drop-shadow-sm">{faction}</p>

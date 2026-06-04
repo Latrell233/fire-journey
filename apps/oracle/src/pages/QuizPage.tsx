@@ -106,17 +106,18 @@ export default function QuizPage() {
       setTimeout(() => {
         setIsCalculating(false);
         navigate('/result');
-      }, 800);
-    }, 2000);
+      }, 500);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [isComplete]);
 
-  // Route guard: no questions → redirect to home
+  // Route guard: no questions → show loading
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[#8a7a6a]">加载中...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <div className="w-8 h-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+        <p className="text-[13px] text-[#8a7a6a]">正在准备题目...</p>
       </div>
     );
   }
@@ -126,7 +127,12 @@ export default function QuizPage() {
   const isLocked = answers[currentIndex] !== undefined;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        background: `linear-gradient(180deg, #faf8f4 0%, #f5f0e8 40%, #faf8f4 100%)`,
+      }}
+    >
       <div className="px-6 pt-6 pb-2">
         <ProgressBar current={currentIndex + 1} total={questions.length} />
       </div>

@@ -10,6 +10,9 @@ import DimensionReadout from '../components/DimensionReadout';
 import TypeProfile from '../components/TypeProfile';
 import ShareCard from '../components/ShareCard';
 import ResultSummary from '../components/ResultSummary';
+import Celebration from '../components/Celebration';
+import StickyActions from '../components/StickyActions';
+import BackToTop from '../components/BackToTop';
 
 export default function ResultPage() {
   const navigate = useNavigate();
@@ -25,7 +28,10 @@ export default function ResultPage() {
   const { code, faction, typeName, dimensions } = personality;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pb-16">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pb-24">
+      {/* Confetti burst on first visit */}
+      <Celebration />
+
       {/* ① Faction Banner */}
       <FactionBanner faction={faction} typeName={typeName} />
 
@@ -91,7 +97,7 @@ export default function ResultPage() {
         >
           <button
             onClick={() => setShowDimensions(!showDimensions)}
-            className="w-full flex items-center justify-between py-2"
+            className="w-full flex items-center justify-between py-2 hover:opacity-70 transition-opacity duration-150"
           >
             <h2 className="text-[18px] font-bold text-[#2c2c2c]">四维深度解读</h2>
             <span
@@ -122,24 +128,13 @@ export default function ResultPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ⑨ Retake */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.3 }}
-          className="mt-12 mb-8 text-center"
-        >
-          <button
-            onClick={() => {
-              useQuizStore.getState().reset();
-              navigate('/quiz');
-            }}
-            className="text-[13px] text-[#8a7a6a] underline underline-offset-4"
-          >
-            重新测试
-          </button>
-        </motion.div>
       </div>
+
+      {/* ⑨ Sticky bottom actions */}
+      <StickyActions />
+
+      {/* ⑩ Back to top (appears on scroll) */}
+      <BackToTop />
     </motion.div>
   );
 }

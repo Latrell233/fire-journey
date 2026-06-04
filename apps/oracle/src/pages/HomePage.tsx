@@ -83,14 +83,16 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.4 }}
         >
-          <button
+          <motion.button
             onClick={() => navigate('/quiz')}
+            animate={{ boxShadow: ['0 1px 3px rgba(0,0,0,0.08)', '0 4px 14px rgba(212,160,74,0.25)', '0 1px 3px rgba(0,0,0,0.08)'] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             className="w-full bg-primary text-[#2c2c2c] font-bold text-[15px] py-4 rounded-btn
                        active:scale-[0.97] transition-transform duration-150
                        shadow-sm hover:shadow-md"
           >
             破译我的搞钱 DNA
-          </button>
+          </motion.button>
 
           <p className="text-[#8a7a6a] text-[11px] mt-4">
             40 道情景迫选题 · 约 6 分钟 · 全程无需注册

@@ -48,10 +48,10 @@ export default function QuestionCard({ question, selectedAnswer, isLocked, onSel
                   aria-label={`选项 ${label}: ${opt.text}`}
                   className={`w-full text-left p-4 rounded-btn border-2 transition-all duration-150
                     ${isSelected
-                      ? 'border-primary bg-[#f6f1eb] text-[#2c2c2c]'
+                      ? 'border-primary bg-[#f6f1eb] text-[#2c2c2c] scale-[1.01]'
                       : isLocked
                         ? 'border-[#f0ebe4] bg-white text-[#6b6258]/40 cursor-default'
-                        : 'border-[#f0ebe4] bg-white text-[#6b6258] hover:border-primary/30 active:scale-[0.98]'
+                        : 'border-[#f0ebe4] bg-white text-[#6b6258] hover:border-primary/30 hover:bg-[#faf8f4] active:scale-[0.98]'
                     }`}
                 >
                   <span className="text-[11px] font-semibold text-primary mr-2">{label}.</span>

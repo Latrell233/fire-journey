@@ -15,12 +15,17 @@ export default function DnaReveal() {
   useEffect(() => {
     const interval = setInterval(() => {
       setMsgIndex((i) => (i + 1) % MESSAGES.length);
-    }, 600);
+    }, 450);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen flex flex-col items-center justify-center px-6"
+    >
       {/* Animated helix-like rings */}
       <div className="relative w-24 h-24 mb-10">
         <motion.div
@@ -73,6 +78,6 @@ export default function DnaReveal() {
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
