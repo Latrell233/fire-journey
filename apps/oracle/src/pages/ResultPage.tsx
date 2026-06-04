@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuizStore } from '../store/quizStore';
+import { FACTION_CONTENT } from '../data/factions';
 import FactionBanner from '../components/FactionBanner';
 import FactionProfileCard from '../components/FactionProfileCard';
 import CodeDisplay from '../components/CodeDisplay';
@@ -13,6 +14,13 @@ import ResultSummary from '../components/ResultSummary';
 import Celebration from '../components/Celebration';
 import StickyActions from '../components/StickyActions';
 import BackToTop from '../components/BackToTop';
+
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
 export default function ResultPage() {
   const navigate = useNavigate();
@@ -26,6 +34,7 @@ export default function ResultPage() {
   if (!personality) return null;
 
   const { code, faction, typeName, dimensions } = personality;
+  const factionColor = FACTION_CONTENT[faction]?.color ?? '#d4a04a';
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pb-24">
@@ -85,6 +94,12 @@ export default function ResultPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.0 }}
         >
+          {/* Section label */}
+          <div className="flex items-center gap-3 mb-3 mt-6">
+            <div className="flex-1 h-px" style={{ backgroundColor: hexToRgba(factionColor, 0.2) }} />
+            <span className="text-[11px] text-[#8a7a6a] uppercase tracking-widest flex-shrink-0">完整报告</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: hexToRgba(factionColor, 0.2) }} />
+          </div>
           <TypeProfile personality={personality} />
         </motion.div>
 
@@ -99,9 +114,14 @@ export default function ResultPage() {
             onClick={() => setShowDimensions(!showDimensions)}
             className="w-full flex items-center justify-between py-2 hover:opacity-70 transition-opacity duration-150"
           >
-            <h2 className="text-[18px] font-bold text-[#2c2c2c]">四维深度解读</h2>
+            <div>
+              <h2 className="text-[18px] font-bold text-[#2c2c2c]">四维深度解读</h2>
+              {!showDimensions && (
+                <p className="text-[11px] text-[#8a7a6a]/60 mt-0.5">点击展开各维度详细分析</p>
+              )}
+            </div>
             <span
-              className="text-[#8a7a6a] text-lg transition-transform duration-200"
+              className="text-[#8a7a6a] text-lg transition-transform duration-200 flex-shrink-0"
               style={{ transform: showDimensions ? 'rotate(180deg)' : 'rotate(0deg)' }}
             >
               ▾
@@ -118,10 +138,10 @@ export default function ResultPage() {
                 className="overflow-hidden"
               >
                 <div className="flex flex-col gap-4 pt-4">
-                  <DimensionReadout dimension="SC" pValue={dimensions.P_SC} />
-                  <DimensionReadout dimension="IG" pValue={dimensions.P_IG} />
-                  <DimensionReadout dimension="FV" pValue={dimensions.P_FV} />
-                  <DimensionReadout dimension="EO" pValue={dimensions.P_EO} />
+                  <DimensionReadout dimension="SC" pValue={dimensions.P_SC} factionColor={factionColor} />
+                  <DimensionReadout dimension="IG" pValue={dimensions.P_IG} factionColor={factionColor} />
+                  <DimensionReadout dimension="FV" pValue={dimensions.P_FV} factionColor={factionColor} />
+                  <DimensionReadout dimension="EO" pValue={dimensions.P_EO} factionColor={factionColor} />
                 </div>
               </motion.div>
             )}

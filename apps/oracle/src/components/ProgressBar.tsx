@@ -34,8 +34,17 @@ export default function ProgressBar({ current, total }: Props) {
         </span>
       </div>
       <div className="w-full h-1.5 bg-[#f0ebe4] rounded-full overflow-hidden relative">
+        {/* Milestone markers at 25% / 50% / 75% */}
+        {[25, 50, 75].map((m) => (
+          <div
+            key={m}
+            className="absolute top-0 bottom-0 w-px bg-[#d4cbc0] z-10"
+            style={{ left: `${m}%` }}
+          />
+        ))}
+
         <motion.div
-          className="absolute left-0 top-0 h-full rounded-full"
+          className="absolute left-0 top-0 h-full rounded-full z-20"
           style={{
             background: 'linear-gradient(90deg, #d4a04a 0%, #c48a3a 100%)',
             width: `${pct}%`,
@@ -47,7 +56,7 @@ export default function ProgressBar({ current, total }: Props) {
         {/* Glow dot at tip */}
         {pct > 0 && (
           <motion.div
-            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-sm"
+            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-sm z-30"
             animate={{ left: `calc(${pct}% - 4px)` }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           />

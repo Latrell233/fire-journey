@@ -4,9 +4,18 @@ import { DIMENSION_LABELS, getDimensionInterpretation, getDimensionBadge } from 
 interface Props {
   dimension: string;
   pValue: number;
+  factionColor: string;
 }
 
-export default function DimensionReadout({ dimension, pValue }: Props) {
+/** Hex → rgba with given alpha */
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+export default function DimensionReadout({ dimension, pValue, factionColor }: Props) {
   const label = DIMENSION_LABELS[dimension];
   const interpretation = getDimensionInterpretation(dimension, pValue);
   const badge = getDimensionBadge(dimension, pValue);
@@ -40,8 +49,10 @@ export default function DimensionReadout({ dimension, pValue }: Props) {
           <span className="font-medium">{label.reverse}</span>
         </div>
 
-        {/* The bar track — split background halves */}
-        <div className="relative h-3 rounded-full overflow-hidden" style={{ background: `linear-gradient(to right, #e8e3db 0%, #e8e3db 50%, #faf5e8 50%, #faf5e8 100%)` }}>
+        {/* The bar track — split background with faction color tint */}
+        <div className="relative h-3 rounded-full overflow-hidden" style={{
+          background: `linear-gradient(to right, ${hexToRgba(factionColor, 0.08)} 0%, ${hexToRgba(factionColor, 0.08)} 50%, ${hexToRgba(factionColor, 0.16)} 50%, ${hexToRgba(factionColor, 0.16)} 100%)`,
+        }}>
           {/* Center marker line */}
           <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[#8a7a6a]/50 z-10" />
 
@@ -50,8 +61,9 @@ export default function DimensionReadout({ dimension, pValue }: Props) {
             initial={{ width: 0 }}
             animate={{ width: fillFromCenter }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="absolute top-0 bottom-0 bg-primary"
+            className="absolute top-0 bottom-0"
             style={{
+              backgroundColor: factionColor,
               [isForward ? 'left' : 'right']: '50%',
               borderRadius: isForward ? '0 9999px 9999px 0' : '9999px 0 0 9999px',
             }}
@@ -62,15 +74,21 @@ export default function DimensionReadout({ dimension, pValue }: Props) {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.3 }}
-            className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white border-2 border-primary rounded-full shadow-sm z-20"
-            style={{ left: `calc(${barPct}% - 7px)` }}
+            className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full shadow-sm z-20"
+            style={{
+              left: `calc(${barPct}% - 7px)`,
+              border: `2px solid ${factionColor}`,
+            }}
           />
         </div>
       </div>
 
       {/* Badge — the fun label */}
       {badge && (
-        <div className="mb-3 px-3 py-2 bg-[#faf5e8] rounded-btn border border-primary/15">
+        <div className="mb-3 px-3 py-2 rounded-btn border" style={{
+          backgroundColor: hexToRgba(factionColor, 0.08),
+          borderColor: hexToRgba(factionColor, 0.2),
+        }}>
           <p className="text-[13px] font-bold text-[#2c2c2c]">
             「{badge.code}」
           </p>

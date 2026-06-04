@@ -96,9 +96,13 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (!isComplete || questions.length === 0) return;
-    setIsCalculating(true);
 
-    const timer = setTimeout(() => {
+    // Brief delay to let the last answer lock animation play (180ms) before transitioning
+    const revealTimer = setTimeout(() => {
+      setIsCalculating(true);
+    }, 250);
+
+    const calcTimer = setTimeout(() => {
       const answerValues = questions.map((_, i) => answers[i] ?? 'B');
       const personality = calculatePersonality(answerValues, questions);
       setResult(personality);
@@ -107,9 +111,12 @@ export default function QuizPage() {
         setIsCalculating(false);
         navigate('/result');
       }, 500);
-    }, 1200);
+    }, 1450);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(revealTimer);
+      clearTimeout(calcTimer);
+    };
   }, [isComplete]);
 
   // Route guard: no questions → show loading

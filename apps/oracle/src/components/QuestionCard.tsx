@@ -54,7 +54,7 @@ export default function QuestionCard({ question, selectedAnswer, isLocked, onSel
                         : 'border-[#f0ebe4] bg-white text-[#6b6258] hover:border-primary/30 hover:bg-[#faf8f4] active:scale-[0.98]'
                     }`}
                 >
-                  <span className="text-[11px] font-semibold text-primary mr-2">{label}.</span>
+                  <span className="text-[13px] font-bold text-primary mr-2 w-5 text-right flex-shrink-0">{label}</span>
                   {opt.text}
                 </motion.button>
               );
