@@ -97,20 +97,29 @@ export default function QuizPage() {
   useEffect(() => {
     if (!isComplete || questions.length === 0) return;
 
-    // Calculate and store result SYNCHRONOUSLY first — before any timer.
-    // This guarantees personality is in Zustand before navigation, regardless of
-    // StrictMode double-mount, timer cleanup, or AnimatePresence exit races.
-    const answerValues = questions.map((_, i) => answers[i] ?? 'B');
-    const result = calculatePersonality(answerValues, questions);
-    setResult(result);
+    // Revert to nested-setTimeout pattern: the inner timer is created inside the
+    // outer callback, so it survives StrictMode double-mount cleanup. Flat timers
+    // all get cleared together, but the inner one is born after cleanup runs.
+    const revealTimer = setTimeout(() => {
+      setIsCalculating(true);
+    }, 250);
 
-    // Timers only control the animation timing, not data flow
-    const t1 = setTimeout(() => setIsCalculating(true), 250);
-    const t2 = setTimeout(() => navigate('/result'), 2000);
+    let navTimer = 0;
+    const calcTimer = setTimeout(() => {
+      const answerValues = questions.map((_, i) => answers[i] ?? 'B');
+      const personality = calculatePersonality(answerValues, questions);
+      setResult(personality);
+
+      navTimer = window.setTimeout(() => {
+        setIsCalculating(false);
+        navigate('/result');
+      }, 500);
+    }, 1450);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
+      clearTimeout(revealTimer);
+      clearTimeout(calcTimer);
+      if (navTimer) clearTimeout(navTimer);
     };
   }, [isComplete]);
 

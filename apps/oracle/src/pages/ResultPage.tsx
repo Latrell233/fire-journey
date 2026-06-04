@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuizStore } from '../store/quizStore';
 import { FACTION_CONTENT } from '../data/factions';
@@ -21,21 +22,16 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 export default function ResultPage() {
+  const navigate = useNavigate();
   const { personality } = useQuizStore();
   const [showDimensions, setShowDimensions] = useState(false);
   const [showReport, setShowReport] = useState(false);
 
-  // personality is now set synchronously before navigation, so it should always
-  // be available. If not (e.g. direct URL access before store hydrates), show
-  // spinner until Zustand persist rehydrates — never auto-redirect.
-  if (!personality) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <div className="w-8 h-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
-        <p className="text-[13px] text-[#8a7a6a]">正在加载结果...</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!personality) navigate('/', { replace: true });
+  }, [personality, navigate]);
+
+  if (!personality) return null;
 
   const { code, faction, typeName, dimensions } = personality;
   const factionColor = FACTION_CONTENT[faction]?.color ?? '#d4a04a';
