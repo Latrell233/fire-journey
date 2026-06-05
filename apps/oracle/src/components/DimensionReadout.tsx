@@ -28,10 +28,12 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
     : pValue > 40 ? '轻度反向'
     : '强反向';
 
-  // Bar logic: 0 = full reverse, 50 = center, 100 = full forward
-  const barPct = pValue;
+  // Bar logic: 0% left edge = full forward, 50% center = balanced, 100% right edge = full reverse.
+  // pValue is forward-percentage: 100 = full forward, 50 = balanced, 0 = full reverse.
+  // Visual position on bar = 100 - pValue (since forward is on the left).
+  const barPct = 100 - pValue;
   const isForward = pValue >= 50;
-  const fillFromCenter = `${Math.abs(pValue - 50) * 2}%`;
+  const fillFromCenter = `${Math.abs(pValue - 50)}%`;
 
   return (
     <div className="bg-white rounded-card p-5 border border-[#f0ebe4]">
@@ -64,8 +66,8 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
             className="absolute top-0 bottom-0"
             style={{
               backgroundColor: factionColor,
-              [isForward ? 'left' : 'right']: '50%',
-              borderRadius: isForward ? '0 9999px 9999px 0' : '9999px 0 0 9999px',
+              [isForward ? 'right' : 'left']: '50%',
+              borderRadius: isForward ? '9999px 0 0 9999px' : '0 9999px 9999px 0',
             }}
           />
 
