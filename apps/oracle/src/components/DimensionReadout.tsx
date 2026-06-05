@@ -30,8 +30,6 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
 
   // Bar logic: 0% left edge = full forward, 50% center = balanced, 100% right edge = full reverse.
   // pValue is forward-percentage: 100 = full forward, 50 = balanced, 0 = full reverse.
-  // Visual position on bar = 100 - pValue (since forward is on the left).
-  const barPct = 100 - pValue;
   const isForward = pValue >= 50;
   const fillFromCenter = `${Math.abs(pValue - 50)}%`;
 
@@ -71,17 +69,6 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
             }}
           />
 
-          {/* Position dot — solid color circle at fill endpoint */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6, duration: 0.3 }}
-            className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full z-20"
-            style={{
-              left: `calc(${barPct}% - 5px)`,
-              backgroundColor: factionColor,
-            }}
-          />
         </div>
       </div>
 
