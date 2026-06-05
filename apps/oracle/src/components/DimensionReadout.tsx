@@ -38,7 +38,10 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
       {/* Header row */}
       <div className="flex justify-between items-baseline mb-1">
         <h3 className="text-sm font-semibold text-[#2c2c2c]">{label.name}</h3>
-        <span className="text-[11px] text-[#8a7a6a]">{strengthLabel}</span>
+        <span className="text-[11px] text-[#8a7a6a]">
+          {strengthLabel}
+          <span className="ml-1 text-[10px] opacity-60">· {label.forward.slice(0, 1)}{pValue}%</span>
+        </span>
       </div>
 
       {/* Bidirectional bar */}
@@ -53,8 +56,10 @@ export default function DimensionReadout({ dimension, pValue, factionColor }: Pr
         <div className="relative h-3 rounded-full overflow-hidden" style={{
           background: `linear-gradient(to right, ${hexToRgba(factionColor, 0.08)} 0%, ${hexToRgba(factionColor, 0.08)} 50%, ${hexToRgba(factionColor, 0.16)} 50%, ${hexToRgba(factionColor, 0.16)} 100%)`,
         }}>
-          {/* Center marker line */}
+          {/* Subtle tick marks at 25% / 50% / 75% */}
+          <div className="absolute left-[25%] top-0 bottom-0 w-px bg-[#8a7a6a]/20 z-[5]" />
           <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[#8a7a6a]/50 z-10" />
+          <div className="absolute left-[75%] top-0 bottom-0 w-px bg-[#8a7a6a]/20 z-[5]" />
 
           {/* Fill: extends from center toward the score side */}
           <motion.div
