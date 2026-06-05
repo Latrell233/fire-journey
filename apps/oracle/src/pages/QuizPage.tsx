@@ -111,7 +111,6 @@ export default function QuizPage() {
       setResult(personality);
 
       navTimer = window.setTimeout(() => {
-        setIsCalculating(false);
         navigate('/result');
       }, 500);
     }, 1450);
