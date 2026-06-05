@@ -39,7 +39,7 @@ export default function App() {
   return (
     <div className="mx-auto max-w-[480px] min-h-screen bg-surface md:shadow-sm">
       <ScrollToTop />
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<PageWrapper><HomePage /></PageWrapper>} />
           <Route path="/quiz" element={<PageWrapper><QuizPage /></PageWrapper>} />

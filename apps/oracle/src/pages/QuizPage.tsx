@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuizStore } from '../store/quizStore';
 import { calculatePersonality } from '@fj/engine-core';
@@ -40,6 +40,7 @@ const TRANSITION_MS = 180;
 
 export default function QuizPage() {
   const navigate = useNavigate();
+  const [isFinishing, setIsFinishing] = useState(false);
   const {
     questions, currentIndex, answers, isComplete, isCalculating,
     setQuestions, submitAnswer, nextQuestion, setResult, setIsCalculating,
@@ -97,28 +98,36 @@ export default function QuizPage() {
   useEffect(() => {
     if (!isComplete || questions.length === 0) return;
 
-    // Revert to nested-setTimeout pattern: the inner timer is created inside the
-    // outer callback, so it survives StrictMode double-mount cleanup. Flat timers
-    // all get cleared together, but the inner one is born after cleanup runs.
-    const revealTimer = setTimeout(() => {
-      setIsCalculating(true);
-    }, 250);
+    // Guard: if we already have a result (back-button re-entry from result page),
+    // skip the DnaReveal animation and go straight to result
+    if (useQuizStore.getState().personality) {
+      navigate('/result', { replace: true });
+      return;
+    }
 
-    let navTimer = 0;
-    const calcTimer = setTimeout(() => {
+    // Stage 1: DnaReveal animation (250ms delay)
+    const t1 = setTimeout(() => setIsCalculating(true), 250);
+
+    // Stage 2: calculate result (1450ms after completion)
+    let t3 = 0;
+    const t2 = setTimeout(() => {
       const answerValues = questions.map((_, i) => answers[i] ?? 'B');
-      const personality = calculatePersonality(answerValues, questions);
-      setResult(personality);
+      setResult(calculatePersonality(answerValues, questions));
 
-      navTimer = window.setTimeout(() => {
-        navigate('/result');
+      // Stage 3: switch to finishing overlay → navigate
+      // Inner setTimeout survives StrictMode double-mount cleanup
+      t3 = window.setTimeout(() => {
+        setIsCalculating(false);
+        setIsFinishing(true);
+        // Brief delay so the overlay renders before AnimatePresence exit
+        setTimeout(() => navigate('/result'), 80);
       }, 500);
     }, 1450);
 
     return () => {
-      clearTimeout(revealTimer);
-      clearTimeout(calcTimer);
-      if (navTimer) clearTimeout(navTimer);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      if (t3) clearTimeout(t3);
     };
   }, [isComplete]);
 
@@ -133,6 +142,21 @@ export default function QuizPage() {
   }
 
   if (isCalculating) return <DnaReveal />;
+
+  // Transition overlay — replaces quiz UI flash with a clean static page
+  // so AnimatePresence mode="wait" can exit smoothly
+  if (isFinishing) {
+    return (
+      <div
+        className="min-h-screen flex flex-col items-center justify-center"
+        style={{
+          background: 'linear-gradient(180deg, #faf8f4 0%, #f5f0e8 40%, #faf8f4 100%)',
+        }}
+      >
+        <p className="text-[15px] text-[#6b6258] font-medium">报告已生成</p>
+      </div>
+    );
+  }
 
   const isLocked = answers[currentIndex] !== undefined;
 
