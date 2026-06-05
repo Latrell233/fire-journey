@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "@fj/design-tokens": "workspace:*",
+    "@vercel/analytics": "^2.0.1",
+    "framer-motion": "^11.0.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "react-router-dom": "^6.26.0",
-    "framer-motion": "^11.0.0"
+    "react-router-dom": "^6.26.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",
