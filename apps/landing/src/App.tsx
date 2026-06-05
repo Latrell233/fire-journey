@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import HeroSection from './components/HeroSection';
 import ProductCard from './components/ProductCard';
 import Footer from './components/Footer';
@@ -14,6 +15,7 @@ export default function App() {
         ))}
       </main>
       <Footer />
+      <Analytics />
     </div>
   );
 }
