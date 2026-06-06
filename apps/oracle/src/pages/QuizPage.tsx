@@ -8,29 +8,34 @@ import QuestionCard from '../components/QuestionCard';
 import DnaReveal from '../components/DnaReveal';
 import questionsData from '../data/questions.json';
 
+/** Number of questions randomly sampled per dimension. Set to 10 for full version. */
+const QUESTIONS_PER_DIMENSION = 7;
+
+const DIMENSIONS = ['SC', 'IG', 'FV', 'EO'] as const;
+
 function shuffleQuestions(qs: QuestionJSON[]): QuestionJSON[] {
   const byType: Record<string, QuestionJSON[]> = {};
   for (const q of qs) {
     (byType[q.type] ??= []).push(q);
   }
 
-  for (const type of ['SC', 'IG', 'FV', 'EO']) {
-    const group = byType[type] ?? [];
-    for (let i = group.length - 1; i > 0; i--) {
+  // Shuffle each dimension, then sample N
+  const sampled: Record<string, QuestionJSON[]> = {};
+  for (const dim of DIMENSIONS) {
+    const pool = [...(byType[dim] ?? [])];
+    for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [group[i], group[j]] = [group[j], group[i]];
+      [pool[i], pool[j]] = [pool[j], pool[i]];
     }
+    sampled[dim] = pool.slice(0, QUESTIONS_PER_DIMENSION);
   }
 
-  const groups = [
-    byType.SC ?? [], byType.IG ?? [],
-    byType.FV ?? [], byType.EO ?? [],
-  ];
+  // Interleave: one question from each dimension per round
   const result: QuestionJSON[] = [];
-  const maxLen = Math.max(...groups.map(g => g.length));
+  const maxLen = Math.max(...DIMENSIONS.map(d => sampled[d].length));
   for (let i = 0; i < maxLen; i++) {
-    for (const group of groups) {
-      if (i < group.length) result.push(group[i]);
+    for (const dim of DIMENSIONS) {
+      if (i < sampled[dim].length) result.push(sampled[dim][i]);
     }
   }
   return result;

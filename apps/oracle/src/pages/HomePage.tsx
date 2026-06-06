@@ -95,7 +95,7 @@ export default function HomePage() {
           </motion.button>
 
           <p className="text-[#8a7a6a] text-[11px] mt-4">
-            40 道情景迫选题 · 约 6 分钟 · 全程无需注册
+            28 道情景迫选题 · 约 4 分钟 · 全程无需注册
           </p>
         </motion.div>
 
